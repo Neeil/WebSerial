@@ -49,10 +49,8 @@ router.route('/commands')
        })
     });
 
-
-
 // Serial port functions.
-var SerialPort = require("serialport").SerialPort
+var SerialPort = require("serialport").SerialPort;
 var serialPort = new SerialPort("/dev/ttyUSB0", {
     baudrate: 57600
 }, false); // this is the openImmediately flag [default is true]
@@ -63,16 +61,19 @@ serialPort.open(function (error) {
     } else {
         console.log('Serial Port open');
         serialPort.on('data', function(data) {
-
             console.log('data received: ' + data);
             var command = new Command();
             command.command = data;
             var date = new Date();
-            command.time = date.getHours();
+            command.time = date.getDay().toString() 
+                + date.getHours().toString() 
+                + date.getMinutes().toString()
+                + date.getSeconds().toString() 
+                + date.getMilliseconds().toString();
             command.save(function(err){
                 if(err)
                     console.log(err);
-                console.log('Command Reeived');
+                console.log('Command Received');
             })
 
         });
@@ -85,7 +86,6 @@ serialPort.open(function (error) {
 });
 
 console.log('Serial Port Running');
-
 
 // REGISTER OUR ROUTES ---------------------------------------------
 app.use('/api', router);
