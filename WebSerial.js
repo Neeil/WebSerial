@@ -19,7 +19,7 @@ var port = process.env.PORT || 8080;
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/neiltestdb');
 var Command = require('./models/Command');
-
+var Message = require('./models/Message');
 
 // ROUTES FOR OUR API
 // ======================================================================
@@ -62,15 +62,15 @@ serialPort.open(function (error) {
         console.log('Serial Port open');
         serialPort.on('data', function(data) {
             console.log('data received: ' + data);
-            var command = new Command();
-            command.command = data;
+            var message = new Message();
+            message.command = data;
             var date = new Date();
-            command.time = date.getDay().toString() 
+            message.time = date.getDay().toString() 
                 + date.getHours().toString() 
                 + date.getMinutes().toString()
                 + date.getSeconds().toString() 
                 + date.getMilliseconds().toString();
-            command.save(function(err){
+            message.save(function(err){
                 if(err)
                     console.log(err);
                 console.log('Command Received');
